@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<link href="jquery-mobile/jquery.mobile.theme-1.0.min.css" rel="stylesheet" type="text/css">
+<link href="jquery-mobile/jquery.mobile.structure-1.0.min.css" rel="stylesheet" type="text/css">
+<link href="css/Freddo.css" rel="stylesheet" type="text/css">
+<script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+<script src="js/knockout-2.2.0.js" type="text/javascript"></script>
+<script src="js/Freddo.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div data-role="page" id="JobStatus" data-add-back-btn="true">
+  <div data-role="header">
+  <a href="#" data-role="button"
+ data-rel="back" data-icon="arrow-l" data-iconpos="notext" >Back</a>    
+ <h1>Job Status</h1>
+  <h3><span id="spn_DisplayName"></span></h3>
+ <a data-role="button" href="Dashboard.html" rel="external" data-icon="home" data-iconpos="notext">Home</a>
+  </div>
+  <div data-role="content">
+  <div style="width:100%;overflow:auto;height:400px;">
+  <table class="ui-body-d ui-shadow" id="tbl_Queue">
+    <thead class="ui-bar-d">
+        <tr>
+        <th><input type="checkbox" id="CheckAll" />Select All</th>
+        <th>Jobs</th>
+        <th>JobID</th>
+        <th>Job Date</th>
+        <th>Customer Name</th>
+        <th>Job Name</th>
+        <th>Media Size</th>
+        <th>Qty</th>
+        <th>RippingName</th>
+        <th>Publish File Name</th>
+        <th>Printing Media Abbr</th>
+        <th>Current Status</th>
+        <th data-bind="visible: false">LogID</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: ServiceData">
+        <tr>
+        	<td><input type="checkbox" /></td>            
+            <td ><span data-bind="text: Jobs" /></td>
+            <td ><span data-bind="text: JobID" /></td>
+            <td ><span data-bind="text: JobDate" /></td>
+			<td ><span data-bind="text: CustomerName" /></td>
+            <td ><span data-bind="text: JobName" /></td>
+            <td ><span data-bind="text: Mediasize" /></td>
+            <td ><span data-bind="text: Qty" /></td>
+            <td ><span data-bind="text: RippingName" /></td>
+            <td ><span data-bind="text: PublishFileName" /></td>
+            <td ><span data-bind="text: PrintingMediaAbbr" /></td>
+            <td ><span data-bind="text: CurrentStatus" /></td>
+            <td data-bind="visible: false"><span data-bind="text: LogID" /></td>
+        </tr>
+    </tbody>
+</table>
+  </div>
+  <button data-theme="b" id="UpdateQueue">Update</button>
+  </div>
+  <div data-role="footer" data-id="FixedFooter" data-position="fixed">
+    <h4>Copyright &copy; PNBS</h4>
+  </div>
+</div>
+<script type="text/javascript" language="javascript" >
+$(document).ready(function(e) {
+	if(sessionStorage.length!=0)
+	{
+		var parameter=location.search.substring(1).split('&');
+		$('#UpdateQueue').attr("name",(parameter[0].split('='))[1]);
+		getJobStatus((parameter[0].split('='))[1]);
+		$('#spn_DisplayName').text("Welcome "+sessionStorage.DisplayName);
+	}
+	else
+	   window.location.href="Login.html";
+});
+$('#UpdateQueue').click(function(e) {
+	var JobID="";
+	var LogID="";
+	var IndexOfJobID=$('#tbl_Queue thead th:contains(JobID)').index();
+	var IndexOfLogID=$('#tbl_Queue thead th:contains(LogID)').index();
+    $("#tbl_Queue tbody tr").each(function(index, element) {
+		if($(this).find('td:first input[type=checkbox]').is(":checked"))
+		{
+          JobID+=","+ $(this).find('td:eq('+IndexOfJobID+')').text();
+		  LogID+=","+$(this).find('td:eq('+IndexOfLogID+')').text();
+		}
+    });
+	UpdateJobStatus($(this).attr("name"),JobID.substring(1),LogID.substring(1));
+});
+
+$("#CheckAll").change(function(e) {
+	$("#tbl_Queue tbody input[type=checkbox]").attr("checked",$("#CheckAll").is(":checked"));
+  });
+</script>
+</body>
+</html>

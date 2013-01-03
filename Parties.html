@@ -1,0 +1,49 @@
+<!doctype html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+
+<link href="jquery-mobile/jquery.mobile.theme-1.0.min.css" rel="stylesheet" type="text/css" />
+<link href="jquery-mobile/jquery.mobile.structure-1.0.min.css" rel="stylesheet" type="text/css" />
+<script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+<script src="js/knockout-2.2.0.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript">
+$(document).ready(function(e) {
+    $.ajax({
+		url:"http://10.2.0.20:8090/freddoservice.reports.svc/json/selectfewfromcustomeraccount",
+		data:"{}",
+		contentType:"application/json; charset=utf-8",
+		dataType:"jsonp",
+		success: function(data){
+			$.each(data,function(key,value){
+				$("#customer-list").append("<li id="+value[0]+"><a href=#><h3>"+value[1]+"</h3><p>"+value[2]+"</p></a></li>");
+				
+			});
+			$("#customer-list").listview("refresh");
+		},
+		error: function(msg){
+			alert("Error");
+		}
+	});
+});
+</script>
+</head>
+
+<body>
+<div data-role="page" id="parties">
+  <div data-role="header">
+    <h1>Parties</h1>
+  </div>
+  <div data-role="content">
+    <ul data-role="listview" data-filter="true" id="customer-list">
+    </ul>
+
+  </div>
+  
+  <div data-role="footer">
+    <h4>Copyright &copy; PNBS</h4>
+  </div>
+</div>
+</body>
+</html>
